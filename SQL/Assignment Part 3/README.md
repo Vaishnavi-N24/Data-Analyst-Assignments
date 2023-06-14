@@ -52,7 +52,7 @@ BEGIN
     WHERE customerNumber = cust_No;
 
     RETURN status;
-  END //
+    END //
 
     DELIMITER ;
 

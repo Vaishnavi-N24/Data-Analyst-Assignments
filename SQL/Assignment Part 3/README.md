@@ -61,12 +61,12 @@ SELECT customer_status(103);
 
 -- b. Write a query that displays customerNumber, customername and purchase_status from customers table.
 
-    select c.customerNumber,
-         c.customerName,
-           o.status
-      from customers c
-        LEFT JOIN orders o
-        USING (customerNumber);
+    SELECT c.customerNumber,
+       c.customerName,
+       o.status
+FROM customers c
+LEFT JOIN orders o ON c.customerNumber = o.customerNumber;
+
 
 ## 3. Replicate the functionality of 'on delete cascade' and 'on update cascade' using triggers on movies and rentals tables.
 -- Note: Both tables - movies and rentals - don't have primary or foreign keys. Use only triggers to implement the above.

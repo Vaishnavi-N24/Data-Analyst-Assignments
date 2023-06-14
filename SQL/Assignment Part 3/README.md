@@ -52,20 +52,20 @@ BEGIN
     WHERE customerNumber = cust_No;
 
     RETURN status;
-END //
+  END //
 
-DELIMITER ;
+    DELIMITER ;
 
-SELECT customer_status(103);
+       SELECT customer_status(103);
 
 
 -- b. Write a query that displays customerNumber, customername and purchase_status from customers table.
 
     SELECT c.customerNumber,
        c.customerName,
-       o.status
-FROM customers c
-LEFT JOIN orders o ON c.customerNumber = o.customerNumber;
+       o.status 
+       FROM customers c
+       LEFT JOIN orders o ON c.customerNumber = o.customerNumber;
 
 
 ## 3. Replicate the functionality of 'on delete cascade' and 'on update cascade' using triggers on movies and rentals tables.

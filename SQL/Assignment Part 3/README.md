@@ -39,8 +39,8 @@
 
     DELIMITER //
 
-CREATE FUNCTION customer_status(cust_No INT) RETURNS VARCHAR(20)
-BEGIN
+    CREATE FUNCTION customer_status(cust_No INT) RETURNS VARCHAR(20)
+    BEGIN
     DECLARE status VARCHAR(20);
 
     SELECT CASE

@@ -39,21 +39,25 @@
 
     DELIMITER //
 
-    CREATE PROCEDURE customer_status( cust_No INT )    
-        BEGIN
-        SELECT CASE
-             WHEN amount < 25000 THEN 'Silver'
-             WHEN amount BETWEEN 25000 AND 50000 THEN 'Gold'
-                   ELSE 'Platinum'
-                   END AS Status
-          from payments
-            where customerNumber = cust_No;
+CREATE FUNCTION customer_status(cust_No INT) RETURNS VARCHAR(20)
+BEGIN
+    DECLARE status VARCHAR(20);
 
-      END //
+    SELECT CASE
+        WHEN SUM(amount) < 25000 THEN 'Silver'
+        WHEN SUM(amount) BETWEEN 25000 AND 50000 THEN 'Gold'
+        ELSE 'Platinum'
+    END INTO status
+    FROM payments
+    WHERE customerNumber = cust_No;
 
-    DELIMITER ;
+    RETURN status;
+END //
 
-    CALL customer_status( 103 );
+DELIMITER ;
+
+SELECT customer_status(103);
+
 
 -- b. Write a query that displays customerNumber, customername and purchase_status from customers table.
 

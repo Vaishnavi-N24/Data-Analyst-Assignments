@@ -56,7 +56,7 @@
 
     DELIMITER ;
 
-       SELECT customer_status(103);
+       CALL customer_status(103);
 
 
 -- b. Write a query that displays customerNumber, customername and purchase_status from customers table.

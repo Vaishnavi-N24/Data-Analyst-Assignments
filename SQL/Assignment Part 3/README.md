@@ -24,83 +24,7 @@
 
     call order_status(2005, 4);
 
-## 2. Write a stored procedure to insert a record into the cancellations table for all cancelled orders.
-
--- STEPS: 
-
--- a.	Create a table called cancellations with the following fields
-
--- id (primary key), 
--- customernumber (foreign key - Table customers), 
--- ordernumber (foreign key - Table Orders), 
--- comments
-
--- All values except id should be taken from the order table.
-
--- b. Read through the orders table . If an order is cancelled, then put an entry in the cancellations table.
-
-    DELIMITER //
-    CREATE PROCEDURE cancelled_order( )
-      BEGIN
-        DROP TABLE IF EXISTS cancellation ;
-        CREATE TABLE cancellation
-          (
-                 id int primary key auto_increment,
-                 customerNumber int,
-                 orderNumber int,
-                 comments text,
-                 FOREIGN KEY (customerNumber)
-            REFERENCES customers(customerNumber)
-              ON DELETE CASCADE,
-                 FOREIGN KEY (orderNumber)
-            REFERENCES orders(orderNumber)
-              ON DELETE CASCADE
-           );
-           INSERT INTO cancellation ( customerNumber, orderNumber, comments)
-                             SELECT   customerNumber, orderNumber, comments
-                      FROM orders
-                        WHERE status = 'Cancelled';
-           SELECT *
-            FROM cancellation;
-        END //
-    DELIMITER ;
-
-    CALL cancelled_order();
-
--- ANOTHER APPROACH
-
-    DROP PROCEDURE IF EXISTS cancelled_order;
-
-    DELIMITER //
-    CREATE DEFINER=`root`@`localhost` PROCEDURE `cancelled_order`( )
-    BEGIN
-      CREATE TABLE IF NOT EXISTS cancellation
-          (
-                 id int primary key auto_increment,
-                 customerNumber int,
-                 orderNumber int,
-                 comments text,
-                 FOREIGN KEY (customerNumber)
-            REFERENCES customers(customerNumber)
-              ON DELETE CASCADE,
-                 FOREIGN KEY (orderNumber)
-            REFERENCES orders(orderNumber)
-              ON DELETE CASCADE
-           );
-      INSERT INTO cancellation ( customerNumber, orderNumber, comments)
-                SELECT   customerNumber, orderNumber, comments
-                FROM orders
-                  WHERE status = 'Cancelled' AND
-                  NOT EXISTS ( select customerNumber, orderNumber, comments from cancellation );
-      SELECT *
-        FROM cancellation;		
-        END //
-    DELIMITER ;
-
-
-    CALL cancelled_order();
-
-## 3. a. Write function that takes the customernumber as input and returns the purchase_status based on the following criteria . [table:Payments]
+## 2. a. Write function that takes the customernumber as input and returns the purchase_status based on the following criteria . [table:Payments]
 
 -- if the total purchase amount for the customer is < 25000 status = Silver, amount between 25000 and 50000, status = Gold
 -- if amount > 50000 Platinum
@@ -140,7 +64,7 @@
         LEFT JOIN orders o
         USING (customerNumber);
 
-## 4. Replicate the functionality of 'on delete cascade' and 'on update cascade' using triggers on movies and rentals tables.
+## 3. Replicate the functionality of 'on delete cascade' and 'on update cascade' using triggers on movies and rentals tables.
 -- Note: Both tables - movies and rentals - don't have primary or foreign keys. Use only triggers to implement the above.
 
 -- Q. For ON DELETE CASCADE, if a parent with an id is deleted, a record in child with parent_id = parent.id will be automatically deleted. This should be no problem.
@@ -224,14 +148,14 @@ What if I (for some reason) update the child.parent_id to be something not exist
     select *
       from rentals;
 
-## 5. Select the first name of the employee who gets the third highest salary. [table: employee]
+## 4. Select the first name of the employee who gets the third highest salary. [table: employee]
 
     select *
       from employee
         order by salary desc
           limit 2,1;
 
-## 6. Assign a rank to each employee  based on their salary. The person having the highest salary has rank 1. [table: employee]
+## 5. Assign a rank to each employee  based on their salary. The person having the highest salary has rank 1. [table: employee]
 
     select *,
          dense_rank () OVER (order by salary desc) as Rank_salary
